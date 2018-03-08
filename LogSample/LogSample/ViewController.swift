@@ -11,6 +11,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        // Loggerサンプル
         Logger.shared.info(category: "UI", message: "Info Log!", debugModeOnly: true)
         Logger.shared.debug(category: "UI", message: "Debug Log!", debugModeOnly: true)
         Logger.shared.error(category: "UI", message: "Error Log!", debugModeOnly: true)
