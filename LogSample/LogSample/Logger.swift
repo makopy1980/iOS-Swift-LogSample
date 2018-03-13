@@ -156,7 +156,7 @@ class Logger: NSObject {
     /// - Parameter category: カテゴリ(任意文字列/タグ)
     /// - Returns: ログ出力用カテゴリ文字列
     private func categoryStringFrom(category: String) -> String {
-        return "[" + category + "]"
+        return "[" + category + "]" + " "
     }
     
     /// ログ出力用ログ種別文字列の取得
