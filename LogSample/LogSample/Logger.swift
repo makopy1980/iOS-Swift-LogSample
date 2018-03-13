@@ -1,11 +1,11 @@
 //
 //  Logger.swift
-//  LogSample
 //
 
 import UIKit
 import os.log
 
+/// ロガークラス
 class Logger: NSObject {
     
     //
@@ -157,7 +157,6 @@ class Logger: NSObject {
         return "[" + logLevel.rawValue + "]"
     }
     
-    
     /// ログ出力(デバッグビルド時のみ)
     ///
     /// - Parameters:
@@ -169,7 +168,6 @@ class Logger: NSObject {
             self.writeLog(category: category, message: message, logLevel: logLevel)
         #endif
     }
-    
     
     /// ログ出力
     ///
