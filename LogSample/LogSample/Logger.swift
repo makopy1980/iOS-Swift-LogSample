@@ -51,7 +51,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - debugModeOnly: ログ出力をデバッグモード時に限定するかどうか
-    public func info(category: String!, message: StaticString!, debugModeOnly: Bool) {
+    public func info(category: String, message: StaticString, debugModeOnly: Bool) {
         if(debugModeOnly) {
             self.writeDebugLog(category: category, message: message, logLevel: LogLevel.info)
         } else {
@@ -65,7 +65,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - debugModeOnly: ログ出力をデバッグモード時に限定するかどうか
-    public func debug(category: String!, message: StaticString!, debugModeOnly: Bool) {
+    public func debug(category: String, message: StaticString, debugModeOnly: Bool) {
         if(debugModeOnly) {
             self.writeDebugLog(category: category, message: message, logLevel: LogLevel.debug)
         } else {
@@ -79,7 +79,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - debugModeOnly: ログ出力をデバッグモード時に限定するかどうか
-    public func error(category: String!, message: StaticString!, debugModeOnly: Bool) {
+    public func error(category: String, message: StaticString, debugModeOnly: Bool) {
         if(debugModeOnly) {
             self.writeDebugLog(category: category, message: message, logLevel: LogLevel.error)
         } else {
@@ -93,7 +93,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - debugModeOnly: ログ出力をデバッグモード時に限定するかどうか
-    public func fault(category: String!, message: StaticString!, debugModeOnly: Bool) {
+    public func fault(category: String, message: StaticString, debugModeOnly: Bool) {
         if(debugModeOnly) {
             self.writeDebugLog(category: category, message: message, logLevel: LogLevel.fault)
         } else {
@@ -107,7 +107,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - debugModeOnly: ログ出力をデバッグモード時に限定するかどうか
-    public func `default`(category: String!, message: StaticString!, debugModeOnly: Bool) {
+    public func `default`(category: String, message: StaticString, debugModeOnly: Bool) {
         if(debugModeOnly) {
             self.writeDebugLog(category: category, message: message, logLevel: LogLevel.default)
         } else {
@@ -118,9 +118,6 @@ class Logger: NSObject {
     //
     // MARK: - Private
     //
-    
-    // Bundle ID
-    private let bundleId: String! = Bundle.main.bundleIdentifier
     
     /// ログレベルからOSLogTypeを取得
     ///
@@ -158,7 +155,7 @@ class Logger: NSObject {
     ///
     /// - Parameter category: カテゴリ(任意文字列/タグ)
     /// - Returns: ログ出力用カテゴリ文字列
-    private func categoryStringFrom(category: String!) -> String {
+    private func categoryStringFrom(category: String) -> String {
         return "[" + category + "]"
     }
     
@@ -176,7 +173,7 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - logLevel: ログレベル
-    private func writeDebugLog(category: String!, message: StaticString!, logLevel: LogLevel) {
+    private func writeDebugLog(category: String, message: StaticString, logLevel: LogLevel) {
         #if DEBUG   // デバッグビルド時
             self.writeLog(category: category, message: message, logLevel: logLevel)
         #endif
@@ -188,16 +185,25 @@ class Logger: NSObject {
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
     ///   - logLevel: ログレベル
-    private func writeLog(category: String!, message: StaticString!, logLevel: LogLevel) {
+    private func writeLog(category: String, message: StaticString, logLevel: LogLevel) {
         if #available(iOS 10.0, *) {    // iOS10以降
             // OSログ設定
-            let osLog = OSLog(subsystem: self.bundleId, category: category)
+            let osLog: OSLog
+            if let bundleId = Bundle.main.bundleIdentifier {
+                osLog = OSLog(subsystem: bundleId, category: category)
+            } else {
+                osLog = OSLog(subsystem: "", category: category)
+            }
+            
+            // ログタイプ取得
             let logType = self.OSLogTypeFrom(logLevel: logLevel)
+            
             // os_logでログ出力
             os_log(message, log: osLog, type: logType)
         } else {    // iOS9以前
             // メッセージにカテゴリを付加
             let logMessage = self.categoryStringFrom(category: category) + self.logTypeStringFrom(logLevel: logLevel) + message.description
+            
             // NSLogでログ出力
             NSLog(logMessage)
         }
