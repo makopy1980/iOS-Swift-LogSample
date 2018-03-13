@@ -17,13 +17,11 @@ class ViewController: UIViewController {
         Logger.shared.error(category: "UI", message: "Error Log!", debugModeOnly: true)
         Logger.shared.fault(category: "UI", message: "Fault Log!", debugModeOnly: true)
         Logger.shared.default(category: "UI", message: "Default Log!", debugModeOnly: true)
+        Logger.shared.debugLog(category: "UI", message: "debugLog Log!")
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
-

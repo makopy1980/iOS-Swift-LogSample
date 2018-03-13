@@ -34,13 +34,15 @@ class Logger: NSObject {
     // MARK: - Public(I/F)
     //
     
-    /// printによるデバッグ出力
+    /// printによるデバッグログ出力
     ///
     /// - Parameters:
     ///   - category: カテゴリ(任意文字列/タグ)
     ///   - message: メッセージ
-    public func debugPrint(category: String!, message: String!) {
-        print(self.categoryStringFrom(category: category) + message)
+    public func debugLog(category: String, message: String) {
+        #if DEBUG   // デバッグビルド時
+            print(self.LogTimeStamp() + " " + self.categoryStringFrom(category: category) + message)
+        #endif
     }
     
     /// Infoレベルログ出力
@@ -138,6 +140,17 @@ class Logger: NSObject {
         case LogLevel.default:
             return OSLogType.default
         }
+    }
+    
+    /// ログ出力用タイムスタンプ取得
+    ///
+    /// - Returns: ログ出力用タイムスタンプ文字列
+    private func LogTimeStamp() -> String {
+        let now = Date.init()
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS   Z"
+        
+        return df.string(from: now)
     }
     
     /// ログ出力用カテゴリ文字列の取得
